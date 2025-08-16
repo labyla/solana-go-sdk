@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/blocto/solana-go-sdk/client"
-	"github.com/blocto/solana-go-sdk/rpc"
+	"github.com/labyla/solana-go-sdk/client"
+	"github.com/labyla/solana-go-sdk/rpc"
 )
 
 func main() {

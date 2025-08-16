@@ -1,8 +1,8 @@
 package compute_budget
 
 import (
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/types"
+	"github.com/labyla/solana-go-sdk/common"
+	"github.com/labyla/solana-go-sdk/types"
 	"github.com/near/borsh-go"
 )
 
@@ -67,7 +67,8 @@ func RequestHeapFrame(param RequestHeapFrameParam) types.Instruction {
 }
 
 type SetComputeUnitLimitParam struct {
-	Units uint32
+	Units    uint32
+	Accounts []types.AccountMeta
 }
 
 // SetComputeUnitLimit set a specific compute unit limit that the transaction is allowed to consume.
@@ -85,13 +86,14 @@ func SetComputeUnitLimit(param SetComputeUnitLimitParam) types.Instruction {
 
 	return types.Instruction{
 		ProgramID: common.ComputeBudgetProgramID,
-		Accounts:  []types.AccountMeta{},
+		Accounts:  param.Accounts,
 		Data:      data,
 	}
 }
 
 type SetComputeUnitPriceParam struct {
 	MicroLamports uint64
+	Accounts      []types.AccountMeta
 }
 
 // SetComputeUnitPrice set a compute unit price in "micro-lamports" to pay a higher transaction
@@ -110,7 +112,7 @@ func SetComputeUnitPrice(param SetComputeUnitPriceParam) types.Instruction {
 
 	return types.Instruction{
 		ProgramID: common.ComputeBudgetProgramID,
-		Accounts:  []types.AccountMeta{},
+		Accounts:  param.Accounts,
 		Data:      data,
 	}
 }

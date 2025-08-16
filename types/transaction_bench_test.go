@@ -3,7 +3,7 @@ package types
 import (
 	"testing"
 
-	"github.com/blocto/solana-go-sdk/common"
+	"github.com/labyla/solana-go-sdk/common"
 )
 
 func BenchmarkSerializeTransaction(b *testing.B) {

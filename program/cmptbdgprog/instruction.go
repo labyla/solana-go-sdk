@@ -1,8 +1,8 @@
 package cmptbdgprog
 
 import (
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/types"
+	"github.com/labyla/solana-go-sdk/common"
+	"github.com/labyla/solana-go-sdk/types"
 	"github.com/near/borsh-go"
 )
 

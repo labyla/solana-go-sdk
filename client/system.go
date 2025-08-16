@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/program/system"
-	"github.com/blocto/solana-go-sdk/rpc"
+	"github.com/labyla/solana-go-sdk/common"
+	"github.com/labyla/solana-go-sdk/program/system"
+	"github.com/labyla/solana-go-sdk/rpc"
 	"github.com/mr-tron/base58"
 )
 

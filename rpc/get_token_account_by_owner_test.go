@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/internal/client_test"
+	"github.com/labyla/solana-go-sdk/common"
+	"github.com/labyla/solana-go-sdk/internal/client_test"
 )
 
 func TestGetTokenAccountsByOwner(t *testing.T) {
