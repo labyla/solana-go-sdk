@@ -1,6 +1,8 @@
 package compute_budget
 
 import (
+	"math/rand/v2"
+
 	"github.com/labyla/solana-go-sdk/common"
 	"github.com/labyla/solana-go-sdk/types"
 	"github.com/near/borsh-go"
@@ -42,6 +44,8 @@ func RequestUnits(param RequestUnitsParam) types.Instruction {
 	}
 }
 
+// ==============================================================================
+
 type RequestHeapFrameParam struct {
 	Bytes uint32
 }
@@ -65,6 +69,8 @@ func RequestHeapFrame(param RequestHeapFrameParam) types.Instruction {
 		Data:      data,
 	}
 }
+
+// ==============================================================================
 
 type SetComputeUnitLimitParam struct {
 	Units    uint32
@@ -91,9 +97,33 @@ func SetComputeUnitLimit(param SetComputeUnitLimitParam) types.Instruction {
 	}
 }
 
+// ==============================================================================
+
 type SetComputeUnitPriceParam struct {
 	MicroLamports uint64
 	Accounts      []types.AccountMeta
+}
+
+func CalculateComputeUnitPrice(priorityFee uint64, computeUnitLimit uint32) uint64 {
+	if computeUnitLimit == 0 {
+		return 0
+	}
+	return uint64((float64(priorityFee) / float64(computeUnitLimit)) * 1_000_000)
+}
+
+func RandomizeComputeUnitPrice(computeUnitPrice uint64) uint64 {
+	var (
+		Sign, Range = false, uint64(100)
+	)
+	if computeUnitPrice > 1000 {
+		Sign, Range = rand.IntN(2) == 1, uint64(0.01*float64(computeUnitPrice))
+	}
+	switch Sign {
+	case true:
+		return computeUnitPrice - rand.Uint64N(Range)
+	default:
+		return computeUnitPrice + rand.Uint64N(Range)
+	}
 }
 
 // SetComputeUnitPrice set a compute unit price in "micro-lamports" to pay a higher transaction
