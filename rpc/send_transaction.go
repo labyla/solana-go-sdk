@@ -21,11 +21,11 @@ type SendTransactionConfig struct {
 }
 
 // SendTransaction submits a signed transaction to the cluster for processing
-func (c *RpcClient) SendTransaction(ctx context.Context, tx string) (JsonRpcResponse[string], error) {
-	return call[JsonRpcResponse[string]](c, ctx, "sendTransaction", tx)
+func (c *RpcClient) SendTransaction(ctx context.Context, tx string, params ...any) (JsonRpcResponse[string], error) {
+	return call[JsonRpcResponse[string]](c, ctx, "sendTransaction", tx, params)
 }
 
 // SendTransaction submits a signed transaction to the cluster for processing
-func (c *RpcClient) SendTransactionWithConfig(ctx context.Context, tx string, cfg SendTransactionConfig) (JsonRpcResponse[string], error) {
-	return call[JsonRpcResponse[string]](c, ctx, "sendTransaction", tx, cfg)
+func (c *RpcClient) SendTransactionWithConfig(ctx context.Context, tx string, cfg SendTransactionConfig, params ...any) (JsonRpcResponse[string], error) {
+	return call[JsonRpcResponse[string]](c, ctx, "sendTransaction", tx, cfg, params)
 }
