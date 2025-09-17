@@ -25,7 +25,7 @@ func (c SendTransactionConfig) toRpc() rpc.SendTransactionConfig {
 }
 
 // SendTransaction send transaction struct directly
-func (c *Client) SendTransaction(ctx context.Context, tx types.Transaction) (string, error) {
+func (c *Client) SendTransaction(ctx context.Context, tx types.Transaction, params ...any) (string, error) {
 	rawTx, err := tx.Serialize()
 	if err != nil {
 		return "", fmt.Errorf("failed to serialize tx, err: %v", err)
@@ -36,6 +36,7 @@ func (c *Client) SendTransaction(ctx context.Context, tx types.Transaction) (str
 				ctx,
 				base64.StdEncoding.EncodeToString(rawTx),
 				SendTransactionConfig{}.toRpc(),
+				params,
 			)
 		},
 		forward[string],
@@ -43,7 +44,7 @@ func (c *Client) SendTransaction(ctx context.Context, tx types.Transaction) (str
 }
 
 // SendTransaction send transaction struct directly
-func (c *Client) SendTransactionWithConfig(ctx context.Context, tx types.Transaction, cfg SendTransactionConfig) (string, error) {
+func (c *Client) SendTransactionWithConfig(ctx context.Context, tx types.Transaction, cfg SendTransactionConfig, params ...any) (string, error) {
 	rawTx, err := tx.Serialize()
 	if err != nil {
 		return "", fmt.Errorf("failed to serialize tx, err: %v", err)
@@ -54,6 +55,7 @@ func (c *Client) SendTransactionWithConfig(ctx context.Context, tx types.Transac
 				ctx,
 				base64.StdEncoding.EncodeToString(rawTx),
 				cfg.toRpc(),
+				params,
 			)
 		},
 		forward[string],
