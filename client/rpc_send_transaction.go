@@ -36,7 +36,7 @@ func (c *Client) SendTransaction(ctx context.Context, tx *types.Transaction, par
 				ctx,
 				base64.StdEncoding.EncodeToString(rawTx),
 				SendTransactionConfig{}.toRpc(),
-				params,
+				params...,
 			)
 		},
 		forward[string],
@@ -55,7 +55,7 @@ func (c *Client) SendTransactionWithConfig(ctx context.Context, tx *types.Transa
 				ctx,
 				base64.StdEncoding.EncodeToString(rawTx),
 				cfg.toRpc(),
-				params,
+				params...,
 			)
 		},
 		forward[string],
