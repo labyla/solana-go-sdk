@@ -23,7 +23,7 @@ func TestClient_SendTransaction(t *testing.T) {
 					c := NewClient(url)
 					return c.SendTransaction(
 						context.Background(),
-						tx,
+						&tx,
 					)
 				},
 				ExpectedValue: "uQ1KB2ZS7WDN5Jf4nFxDCC75reGMdUW8S7mybWfZPzMPo4TULPE8NCkJAaQ5ifCoDmreCnzdPmFjLrDTRJ6QLbV",
@@ -47,7 +47,7 @@ func TestClient_SendTransactionWithConfig(t *testing.T) {
 					c := NewClient(url)
 					return c.SendTransaction(
 						context.Background(),
-						tx,
+						&tx,
 					)
 				},
 				ExpectedValue: "uQ1KB2ZS7WDN5Jf4nFxDCC75reGMdUW8S7mybWfZPzMPo4TULPE8NCkJAaQ5ifCoDmreCnzdPmFjLrDTRJ6QLbV",
@@ -61,7 +61,7 @@ func TestClient_SendTransactionWithConfig(t *testing.T) {
 					c := NewClient(url)
 					return c.SendTransactionWithConfig(
 						context.Background(),
-						tx,
+						&tx,
 						SendTransactionConfig{
 							SkipPreflight: true,
 						},
@@ -78,7 +78,7 @@ func TestClient_SendTransactionWithConfig(t *testing.T) {
 					c := NewClient(url)
 					return c.SendTransactionWithConfig(
 						context.Background(),
-						tx,
+						&tx,
 						SendTransactionConfig{
 							MaxRetries: 5,
 						},
@@ -95,7 +95,7 @@ func TestClient_SendTransactionWithConfig(t *testing.T) {
 					c := NewClient(url)
 					return c.SendTransactionWithConfig(
 						context.Background(),
-						tx,
+						&tx,
 						SendTransactionConfig{
 							PreflightCommitment: rpc.CommitmentConfirmed,
 						},
