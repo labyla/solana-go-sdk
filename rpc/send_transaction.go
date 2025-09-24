@@ -29,3 +29,8 @@ func (c *RpcClient) SendTransaction(ctx context.Context, tx string, params ...an
 func (c *RpcClient) SendTransactionWithConfig(ctx context.Context, tx string, cfg SendTransactionConfig, params ...any) (JsonRpcResponse[string], error) {
 	return call[JsonRpcResponse[string]](c, ctx, append([]any{"sendTransaction", tx, cfg}, params...)...)
 }
+
+// SendTransaction submits a signed transaction to the cluster for processing
+func (c *RpcClient) SendBundle(ctx context.Context, txs []string, params ...any) (JsonRpcResponse[string], error) {
+	return call[JsonRpcResponse[string]](c, ctx, append([]any{"sendBundle", txs}, params...)...)
+}
