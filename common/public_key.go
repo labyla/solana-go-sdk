@@ -113,6 +113,14 @@ func FindAssociatedTokenAddress(walletAddress, tokenMintAddress PublicKey) (Publ
 
 	return FindProgramAddress(seeds, SPLAssociatedTokenAccountProgramID)
 }
+func FindAssociatedToken2022Address(walletAddress, tokenMintAddress PublicKey) (PublicKey, uint8, error) {
+	seeds := [][]byte{}
+	seeds = append(seeds, walletAddress.Bytes())
+	seeds = append(seeds, Token2022ProgramID.Bytes())
+	seeds = append(seeds, tokenMintAddress.Bytes())
+
+	return FindProgramAddress(seeds, SPLAssociatedTokenAccountProgramID)
+}
 
 func FindProgramAddress(seed [][]byte, programID PublicKey) (PublicKey, uint8, error) {
 	var pubKey PublicKey
