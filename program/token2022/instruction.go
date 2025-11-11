@@ -1,4 +1,4 @@
-package token
+package token2022
 
 import (
 	"github.com/labyla/solana-go-sdk/common"
