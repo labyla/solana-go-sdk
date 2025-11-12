@@ -64,7 +64,7 @@ type MintAccount struct {
 }
 
 func MintAccountFromData(data []byte) (MintAccount, error) {
-	if len(data) != MintAccountSize {
+	if len(data) < MintAccountSize {
 		return MintAccount{}, ErrInvalidAccountDataSize
 	}
 
