@@ -61,10 +61,13 @@ type MintAccount struct {
 	Decimals        uint8
 	IsInitialized   bool
 	FreezeAuthority *common.PublicKey
+
+	// CUSTOM
+	IsToken2022 bool
 }
 
 func MintAccountFromData(data []byte) (MintAccount, error) {
-	if len(data) < MintAccountSize {
+	if len(data) != MintAccountSize {
 		return MintAccount{}, ErrInvalidAccountDataSize
 	}
 
@@ -92,6 +95,8 @@ func MintAccountFromData(data []byte) (MintAccount, error) {
 		Decimals:        decimals,
 		IsInitialized:   isInitialized,
 		FreezeAuthority: freezeAuthority,
+
+		IsToken2022: len(data) > MintAccountSize,
 	}, nil
 }
 

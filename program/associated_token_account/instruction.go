@@ -53,6 +53,7 @@ type CreateParam struct {
 	Owner                  common.PublicKey
 	Mint                   common.PublicKey
 	AssociatedTokenAccount common.PublicKey
+	TokenProgramID         common.PublicKey
 }
 
 // Create creates an associated token account for the given wallet address and token mint. Return an error if the account exists.
@@ -66,6 +67,9 @@ func Create(param CreateParam) types.Instruction {
 		panic(err)
 	}
 
+	if param.TokenProgramID == (common.PublicKey{}) {
+		param.TokenProgramID = common.TokenProgramID
+	}
 	return types.Instruction{
 		ProgramID: common.SPLAssociatedTokenAccountProgramID,
 		Accounts: []types.AccountMeta{
@@ -74,7 +78,7 @@ func Create(param CreateParam) types.Instruction {
 			{PubKey: param.Owner, IsSigner: false, IsWritable: false},
 			{PubKey: param.Mint, IsSigner: false, IsWritable: false},
 			{PubKey: common.SystemProgramID, IsSigner: false, IsWritable: false},
-			{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
+			{PubKey: param.TokenProgramID, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
@@ -86,6 +90,7 @@ type CreateIdempotentParam struct {
 	Owner                  common.PublicKey
 	Mint                   common.PublicKey
 	AssociatedTokenAccount common.PublicKey
+	TokenProgramID         common.PublicKey
 }
 
 // CreateIdempotent creates an associated token account for the given wallet address and token mint,
@@ -100,6 +105,9 @@ func CreateIdempotent(param CreateIdempotentParam) types.Instruction {
 		panic(err)
 	}
 
+	if param.TokenProgramID == (common.PublicKey{}) {
+		param.TokenProgramID = common.TokenProgramID
+	}
 	return types.Instruction{
 		ProgramID: common.SPLAssociatedTokenAccountProgramID,
 		Accounts: []types.AccountMeta{
@@ -108,7 +116,7 @@ func CreateIdempotent(param CreateIdempotentParam) types.Instruction {
 			{PubKey: param.Owner, IsSigner: false, IsWritable: false},
 			{PubKey: param.Mint, IsSigner: false, IsWritable: false},
 			{PubKey: common.SystemProgramID, IsSigner: false, IsWritable: false},
-			{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
+			{PubKey: param.TokenProgramID, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
