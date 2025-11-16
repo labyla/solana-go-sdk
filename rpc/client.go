@@ -64,6 +64,7 @@ type ValueWithContext[T any] struct {
 
 type RpcClient struct {
 	endpoint   string
+	header     http.Header
 	httpClient *http.Client
 }
 
@@ -96,6 +97,9 @@ func (c *RpcClient) Call(ctx context.Context, params ...any) ([]byte, error) {
 	req, err := http.NewRequestWithContext(ctx, "POST", c.endpoint, bytes.NewBuffer(j))
 	if err != nil {
 		return nil, fmt.Errorf("failed to do http.NewRequestWithContext, err: %v", err)
+	}
+	if c.header != nil {
+		req.Header = c.header.Clone()
 	}
 	req.Header.Add("Content-Type", "application/json")
 

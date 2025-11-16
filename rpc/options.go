@@ -14,6 +14,12 @@ func WithHTTPClient(h *http.Client) Option {
 	}
 }
 
+func WithHeader(header http.Header) Option {
+	return func(r *RpcClient) {
+		r.header = header
+	}
+}
+
 // WithEndpoint is an Option that allows you configure the rpc endpoint that our
 // client will point to
 func WithEndpoint(endpoint string) Option {
