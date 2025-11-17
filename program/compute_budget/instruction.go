@@ -15,6 +15,7 @@ const (
 	InstructionRequestHeapFrame
 	InstructionSetComputeUnitLimit
 	InstructionSetComputeUnitPrice
+	InstructionSetLoadedAccountsDataSizeLimit
 )
 
 type RequestUnitsParam struct {
@@ -143,6 +144,33 @@ func SetComputeUnitPrice(param SetComputeUnitPriceParam) types.Instruction {
 	return types.Instruction{
 		ProgramID: common.ComputeBudgetProgramID,
 		Accounts:  param.Accounts,
+		Data:      data,
+	}
+}
+
+// ==============================================================================
+
+// SetLoadedAccountsDataSizeLimitParam holds the maximum total loaded accounts data size (bytes).
+type SetLoadedAccountsDataSizeLimitParam struct {
+	AccountDataSizeLimit uint32
+}
+
+// SetLoadedAccountsDataSizeLimit sets a limit on the total size of loaded account data for the transaction.
+func SetLoadedAccountsDataSizeLimit(param SetLoadedAccountsDataSizeLimitParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction          Instruction
+		AccountDataSizeLimit uint32
+	}{
+		Instruction:          InstructionSetLoadedAccountsDataSizeLimit,
+		AccountDataSizeLimit: param.AccountDataSizeLimit,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.ComputeBudgetProgramID,
+		Accounts:  []types.AccountMeta{},
 		Data:      data,
 	}
 }
