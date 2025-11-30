@@ -52,8 +52,8 @@ func WithHeader(header http.Header) Option {
 	})
 }
 func WithOnErrorOmitURL() Option {
-	return WithHttpResponseModifier(func(res *http.Response, _ error) {
-		redactErrorURL(res.Request.Context().Err())
+	return WithHttpResponseModifier(func(_ *http.Response, err error) {
+		redactErrorURL(err)
 	})
 }
 
