@@ -7,10 +7,11 @@ import (
 // Option is a configuration type for the Client
 type Option func(*RpcClient)
 
-// HTTPClient is an Option type that allows you provide your own HTTP client
-func WithHTTPClient(h *http.Client) Option {
+// WithEndpoint is an Option that allows you configure the rpc endpoint that our
+// client will point to
+func WithEndpoint(endpoint string) Option {
 	return func(r *RpcClient) {
-		r.httpClient = h
+		r.endpoint = endpoint
 	}
 }
 
@@ -20,11 +21,16 @@ func WithHeader(header http.Header) Option {
 	}
 }
 
-// WithEndpoint is an Option that allows you configure the rpc endpoint that our
-// client will point to
-func WithEndpoint(endpoint string) Option {
+// HTTPClient is an Option type that allows you provide your own HTTP client
+func WithHttpClient(client HttpClient) Option {
 	return func(r *RpcClient) {
-		r.endpoint = endpoint
+		r.httpClient = client
+	}
+}
+
+func WithOnErrorOmitURL(omit bool) Option {
+	return func(r *RpcClient) {
+		r.onErrorOmitURL = omit
 	}
 }
 

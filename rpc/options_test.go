@@ -14,7 +14,7 @@ func TestOption_WithHTTPClient(t *testing.T) {
 		Timeout: time.Minute * 20,
 	}
 
-	c := New(WithHTTPClient(h))
+	c := New(WithHttpClient(h))
 
 	require.Equal(t, h, c.httpClient)
 }

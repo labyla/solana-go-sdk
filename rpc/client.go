@@ -63,9 +63,10 @@ type ValueWithContext[T any] struct {
 }
 
 type RpcClient struct {
-	endpoint   string
-	header     http.Header
-	httpClient *http.Client
+	endpoint       string
+	header         http.Header
+	httpClient     HttpClient
+	onErrorOmitURL bool
 }
 
 func NewRpcClient(endpoint string) RpcClient { return New(WithEndpoint(endpoint)) }
@@ -106,6 +107,9 @@ func (c *RpcClient) Call(ctx context.Context, params ...any) ([]byte, error) {
 	// do request
 	res, err := c.httpClient.Do(req)
 	if err != nil {
+		if c.onErrorOmitURL {
+			redactErrorURL(err)
+		}
 		return nil, fmt.Errorf("failed to do request, err: %v", err)
 	}
 	defer res.Body.Close()
