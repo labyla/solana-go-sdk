@@ -38,7 +38,7 @@ func main() {
 
 	// If you would like to customize the http client used to make the
 	// requests you could do something like this
-	// c := client.New(rpc.WithEndpoint(rpc.MainnetRPCEndpoint),rpc.WithHTTPClient(customHTTPClient))
+	// c := client.New(rpc.WithEndpoint(rpc.MainnetRPCEndpoint),rpc.WithHttpClient(customHTTPClient))
 
 	resp, err := c.GetVersion(context.TODO())
 	if err != nil {
