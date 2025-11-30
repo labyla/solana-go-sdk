@@ -92,7 +92,16 @@ func New(opts ...Option) RpcClient {
 // Call will return body of response. if http code beyond 200~300, the error also returns.
 func (c *RpcClient) Call(ctx context.Context, params ...any) ([]byte, error) {
 	// prepare payload
-	j, err := preparePayload(params)
+	payload := JsonRpcRequest{
+		JsonRpc: "2.0",
+		Id:      1,
+		Method:  params[0].(string),
+		Params:  params[1:],
+	}
+	for index := range c.modifiers.payload {
+		c.modifiers.payload[index](&payload)
+	}
+	j, err := json.Marshal(payload)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare payload, err: %v", err)
 	}
@@ -102,15 +111,15 @@ func (c *RpcClient) Call(ctx context.Context, params ...any) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to do http.NewRequestWithContext, err: %v", err)
 	}
-	for _, modifier := range c.modifiers.httpRequest {
-		modifier(req)
+	for index := range c.modifiers.httpRequest {
+		c.modifiers.httpRequest[index](req)
 	}
 	req.Header.Add("Content-Type", "application/json")
 
 	// do request
 	res, err := c.httpClient.Do(req)
-	for _, modifier := range c.modifiers.httpResponse {
-		modifier(res, err)
+	for index := range c.modifiers.httpResponse {
+		c.modifiers.httpResponse[index](res, err)
 	}
 	if err != nil {
 		return nil, fmt.Errorf("failed to do request, err: %v", err)
@@ -129,20 +138,6 @@ func (c *RpcClient) Call(ctx context.Context, params ...any) ([]byte, error) {
 	}
 
 	return body, nil
-}
-
-func preparePayload(params []any) ([]byte, error) {
-	// prepare payload
-	j, err := json.Marshal(JsonRpcRequest{
-		JsonRpc: "2.0",
-		Id:      1,
-		Method:  params[0].(string),
-		Params:  params[1:],
-	})
-	if err != nil {
-		return nil, err
-	}
-	return j, nil
 }
 
 func call[T any](c *RpcClient, ctx context.Context, params ...any) (T, error) {
