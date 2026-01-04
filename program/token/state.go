@@ -63,6 +63,7 @@ type MintAccount struct {
 	IsInitialized   bool
 	FreezeAuthority *common.PublicKey
 
+	IsToken2022 bool
 	// Token-2022 extensions (nil if not a Token-2022 account or no extensions)
 	Extensions *token2022.MintExtensions
 }
@@ -104,7 +105,7 @@ func MintAccountFromData(data []byte) (MintAccount, error) {
 	}
 
 	// Parse Token-2022 extensions if present
-	if token2022.HasExtensions(data) {
+	if account.IsToken2022 = token2022.HasExtensions(data); account.IsToken2022 {
 		extensions, err := token2022.ParseMintExtensions(data)
 		if err == nil {
 			account.Extensions = extensions
@@ -136,6 +137,7 @@ type TokenAccount struct {
 	DelegatedAmount uint64
 	CloseAuthority  *common.PublicKey
 
+	IsToken2022 bool
 	// Token-2022 extensions (nil if not a Token-2022 account or no extensions)
 	Extensions *token2022.AccountExtensions
 }
@@ -190,7 +192,7 @@ func TokenAccountFromData(data []byte) (TokenAccount, error) {
 	}
 
 	// Parse Token-2022 extensions if present
-	if token2022.HasExtensions(data) {
+	if account.IsToken2022 = token2022.HasExtensions(data); account.IsToken2022 {
 		extensions, err := token2022.ParseAccountExtensions(data)
 		if err == nil {
 			account.Extensions = extensions
