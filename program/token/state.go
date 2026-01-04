@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 
 	"github.com/labyla/solana-go-sdk/common"
+	"github.com/labyla/solana-go-sdk/program/token2022"
 )
 
 var (
@@ -62,8 +63,13 @@ type MintAccount struct {
 	IsInitialized   bool
 	FreezeAuthority *common.PublicKey
 
-	// CUSTOM
-	IsToken2022 bool
+	// Token-2022 extensions (nil if not a Token-2022 account or no extensions)
+	Extensions *token2022.MintExtensions
+}
+
+// HasExtensions returns true if this mint has Token-2022 extensions
+func (m *MintAccount) HasExtensions() bool {
+	return m.Extensions != nil
 }
 
 func MintAccountFromData(data []byte) (MintAccount, error) {
@@ -89,15 +95,23 @@ func MintAccountFromData(data []byte) (MintAccount, error) {
 		freezeAuthority = &key
 	}
 
-	return MintAccount{
+	account := MintAccount{
 		MintAuthority:   mint,
 		Supply:          supply,
 		Decimals:        decimals,
 		IsInitialized:   isInitialized,
 		FreezeAuthority: freezeAuthority,
+	}
 
-		IsToken2022: len(data) > MintAccountSize,
-	}, nil
+	// Parse Token-2022 extensions if present
+	if token2022.HasExtensions(data) {
+		extensions, err := token2022.ParseMintExtensions(data)
+		if err == nil {
+			account.Extensions = extensions
+		}
+	}
+
+	return account, nil
 }
 
 const TokenAccountSize = 165
@@ -121,10 +135,18 @@ type TokenAccount struct {
 	IsNative        *uint64
 	DelegatedAmount uint64
 	CloseAuthority  *common.PublicKey
+
+	// Token-2022 extensions (nil if not a Token-2022 account or no extensions)
+	Extensions *token2022.AccountExtensions
+}
+
+// HasExtensions returns true if this token account has Token-2022 extensions
+func (t *TokenAccount) HasExtensions() bool {
+	return t.Extensions != nil
 }
 
 func TokenAccountFromData(data []byte) (TokenAccount, error) {
-	if len(data) != TokenAccountSize {
+	if len(data) < TokenAccountSize {
 		return TokenAccount{}, ErrInvalidAccountDataSize
 	}
 
@@ -156,7 +178,7 @@ func TokenAccountFromData(data []byte) (TokenAccount, error) {
 		closeAuthority = &key
 	}
 
-	return TokenAccount{
+	account := TokenAccount{
 		Mint:            mint,
 		Owner:           owner,
 		Amount:          amount,
@@ -165,7 +187,17 @@ func TokenAccountFromData(data []byte) (TokenAccount, error) {
 		IsNative:        isNative,
 		DelegatedAmount: delegatedAmount,
 		CloseAuthority:  closeAuthority,
-	}, nil
+	}
+
+	// Parse Token-2022 extensions if present
+	if token2022.HasExtensions(data) {
+		extensions, err := token2022.ParseAccountExtensions(data)
+		if err == nil {
+			account.Extensions = extensions
+		}
+	}
+
+	return account, nil
 }
 
 func DeserializeTokenAccount(data []byte, accountOwner common.PublicKey) (TokenAccount, error) {

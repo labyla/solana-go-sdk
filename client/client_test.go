@@ -1,9 +1,12 @@
 package client
 
 import (
+	"context"
 	"errors"
+	"log"
 	"testing"
 
+	"github.com/labyla/solana-go-sdk/program/token"
 	"github.com/labyla/solana-go-sdk/rpc"
 	"github.com/stretchr/testify/assert"
 )
@@ -67,4 +70,17 @@ func Test_checkJsonRpcResponse(t *testing.T) {
 			assert.Equal(t, tt.expectedErr, err)
 		})
 	}
+}
+
+func TestFetchTokenMintAccount(t *testing.T) {
+	client := NewClient("https://api.mainnet-beta.solana.com")
+
+	accountInfo, err := client.GetAccountInfo(context.Background(), "tNgTUKhMmhd6nn6WLaTDB2a9E1fsDf9DR3sTNfGpump")
+	assert.NoError(t, err)
+
+	mintAccount, err := token.MintAccountFromData(accountInfo.Data)
+	assert.NoError(t, err)
+
+	log.Printf("Mint Account: %+v", mintAccount)
+	log.Print(mintAccount.Extensions.TokenMetadata)
 }
